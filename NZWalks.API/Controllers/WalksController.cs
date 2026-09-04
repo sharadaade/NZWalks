@@ -9,7 +9,7 @@ using NZWalks.API.Repositories;
 
 namespace NZWalks.API.Controllers
 {
-    // /api/walks
+    // /api/walks - changed
     [Route("api/[controller]")]
     [ApiController]
     public class WalksController : ControllerBase
