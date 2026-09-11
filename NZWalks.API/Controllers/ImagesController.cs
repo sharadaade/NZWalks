@@ -7,5 +7,10 @@ namespace NZWalks.API.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
+
+        public ImagesController()
+        {
+            
+        }
     }
 }
