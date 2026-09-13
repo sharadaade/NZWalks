@@ -9,6 +9,7 @@ using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
 using NZWalks.API.Repositories;
+using System.Text.Json;
 
 namespace NZWalks.API.Controllers
 {
@@ -19,13 +20,15 @@ namespace NZWalks.API.Controllers
         private readonly NZWalksDbContext dbContext;
         private readonly IRegionRepository regionRepository;
         private readonly IMapper mapper;
+        private readonly ILogger<RegionsController> logger;
 
         public RegionsController(NZWalksDbContext dbContext, IRegionRepository regionRepository,
-            IMapper mapper)
+            IMapper mapper, ILogger<RegionsController> logger)
         {
             this.dbContext = dbContext;
             this.regionRepository = regionRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         // GET https://localhost:portnumber/api/regions
@@ -33,26 +36,45 @@ namespace NZWalks.API.Controllers
         [Authorize(Roles = "Reader, Writer")]
         public async Task<IActionResult> GetAll()
         {
-            var regionsDomain = await regionRepository.GetAllAsync();
+            try
+            {
+                // ================== Serilog ===================
+                //logger.LogInformation("Get all method invoked");
 
-            // Map Domain Models to DTOs
-            //var regionDto = new List<Region>();
+                //logger.LogWarning("This is warnig log");
+                //logger.LogError("This is Error log");
 
-            //foreach(var regionDomain in regionsDomain)
-            //{
-            //    regionDto.Add(new Region
-            //    {
-            //        Id = regionDomain.Id,
-            //        Name = regionDomain.Name,
-            //        Code = regionDomain.Code,
-            //        RegionImageUrl = regionDomain.RegionImageUrl
-            //    });
-            //}
+                var regionsDomain = await regionRepository.GetAllAsync();
 
-            // Map Domain Models to DTOs
-            var regionDto = mapper.Map<List<Region>>(regionsDomain);
+                // ================== Serilog ===================
+                //logger.LogInformation($"Finished Get all request data and Data : {JsonSerializer.Serialize(regionsDomain)}");
 
-            return Ok(regionDto);
+                // Map Domain Models to DTOs
+                //var regionDto = new List<Region>();
+
+                //foreach(var regionDomain in regionsDomain)
+                //{
+                //    regionDto.Add(new Region
+                //    {
+                //        Id = regionDomain.Id,
+                //        Name = regionDomain.Name,
+                //        Code = regionDomain.Code,
+                //        RegionImageUrl = regionDomain.RegionImageUrl
+                //    });
+                //}
+
+                // Map Domain Models to DTOs
+                var regionDto = mapper.Map<List<Region>>(regionsDomain);
+
+                return Ok(regionDto);
+            }
+            catch (Exception ex)
+            {
+                //logger.LogError(ex, ex.Message);
+                throw;
+            }
+
+            
         }
 
         // GET: http://localhost:portnumber/api/regions/{id}
