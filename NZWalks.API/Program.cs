@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.OpenApi;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
+using NZWalks.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -130,6 +131,8 @@ if (app.Environment.IsDevelopment())
 //    app.MapOpenApi();
 //    app.MapScalarApiReference();
 //}
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 
