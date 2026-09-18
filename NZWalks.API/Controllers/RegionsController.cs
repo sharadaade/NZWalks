@@ -44,7 +44,7 @@ namespace NZWalks.API.Controllers
                 //logger.LogWarning("This is warnig log");
                 //logger.LogError("This is Error log");
 
-                var regionsDomain = await regionRepository.GetAllAsync();
+                var regions = await regionRepository.GetAllAsync();
 
                 // ================== Serilog ===================
                 //logger.LogInformation($"Finished Get all request data and Data : {JsonSerializer.Serialize(regionsDomain)}");
@@ -64,7 +64,7 @@ namespace NZWalks.API.Controllers
                 //}
 
                 // Map Domain Models to DTOs
-                var regionDto = mapper.Map<List<Region>>(regionsDomain);
+                var regionDto = mapper.Map<List<Region>>(regions);
 
                 return Ok(regionDto);
             }
@@ -83,14 +83,14 @@ namespace NZWalks.API.Controllers
         public async Task<IActionResult> GetById(Guid id)
         {
             // Find() works with only Primary Key
-            var regionDto = await regionRepository.GetByIdAsync(id);
+            var region = await regionRepository.GetByIdAsync(id);
 
             // FirstOrDefault() works with other property like Id, Name, Code etc.
             //var result = dbContext.Regions.FirstOrDefault(x => x.Id == id);
 
-            if (regionDto == null) return NotFound();
+            if (region == null) return NotFound();
 
-            return Ok(mapper.Map<RegionDto>(regionDto));
+            return Ok(mapper.Map<RegionDto>(region));
         }
 
         // POST to Create New Region
